@@ -1,19 +1,50 @@
-import sounddevice as sd
-from scipy.io.wavfile import write
+import librosa, librosa.display
+import matplotlib.pyplot as plt
+import numpy as np
 
-def record_audio_and_save(save_path, n_times=50):
+file = "dog_barking_copy.wav"
 
-    input("To start recording press Enter: ")
-    i = 0
-    for i in range(n_times):
-        fs = 44100
-        seconds = 2
+signal, sr = librosa.load(file, sr=22050)
 
-        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=1)
-        sd.wait()
-        write(save_path + str(i) + ".wav", fs, myrecording)
-        input(f"Press [Enter] to record next or [ctrl + C] to stop ({i + 1}/{n_times}): ")
+# librosa.display.waveshow(signal, sr=sr)
+# plt.xlabel("Time")
+# plt.ylabel("Amplitude")
+# plt.show()
 
 
-print("Recording the Wake Word:\n")
-record_audio_and_save("audio_data/", n_times=100) 
+# Fast Fourier Transform
+fft = np.fft.fft(signal)
+
+magnitude = np.abs(fft)
+frequency = np.linspace(0, sr, len(magnitude))
+
+half_frequency = frequency[:int(len(frequency)/2)]
+half_magnitude = magnitude[:int(len(magnitude)/2)]
+
+# plt.plot(half_frequency, half_magnitude)
+# plt.xlabel("Frequency")
+# plt.ylabel("Magnitude")
+# plt.show()
+
+
+# Short Time Fourier Transform
+stft = librosa.core.stft(signal, hop_length=512, n_fft=2048)
+spectrogram = np.abs(stft)
+
+log_spectrogram = librosa.amplitude_to_db(spectrogram)
+
+# librosa.display.specshow(log_spectrogram, sr=sr, hop_length=512)
+# plt.xlabel("Time")
+# plt.ylabel("Frequency")
+# plt.colorbar()
+# plt.show()
+
+
+# Mel Frequency Cepstral Coefficients (MFCCs)
+MFCCs = librosa.feature.mfcc(y=signal, n_fft=2048, hop_length=512, n_mfcc=13)
+
+librosa.display.specshow(MFCCs, sr=sr, hop_length=512)
+plt.xlabel("Time")
+plt.ylabel("MFCC")
+plt.colorbar()
+plt.show()
