@@ -29,11 +29,11 @@ if __name__ == "__main__":
 
         keras.layers.Dense(256, activation='relu'),
 
-        keras.layers.Dropout(0.5),
+        keras.layers.Dropout(0.3),
 
         keras.layers.Dense(256, activation='relu'),
 
-        keras.layers.Dropout(0.5),
+        keras.layers.Dropout(0.3),
 
         keras.layers.Dense(64, activation='relu'),
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     ])
 
-    optimiser = keras.optimizers.Adam(learning_rate=0.0001)
+    optimiser = keras.optimizers.Adam(learning_rate=0.001)
     model.compile(optimizer=optimiser,
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
