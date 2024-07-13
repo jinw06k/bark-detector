@@ -15,7 +15,7 @@ def load_data(data_path):
 
 
 model = tf.keras.models.load_model('model.keras')
-X_dog, y_dog = load_data("test.json")
+X_dog, y_dog = load_data("other.json")
 
 i = 0
 for x in X_dog:
