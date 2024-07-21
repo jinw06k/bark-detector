@@ -15,21 +15,18 @@ def load_data(data_path):
 
 
 model = tf.keras.models.load_model('model.keras')
-X_dog, y_dog = load_data("other.json")
+X_dog, y_dog = load_data("data.json")
 
-i = 0
-for x in X_dog:
+i = 2000
+wrong = 0
+len = X_dog.shape[0]
+print(len)
+for x in X_dog[2000:3000]:
     prediction = model.predict(x[np.newaxis, ...])
 
-    print("Prediction: ")
-    if prediction < 0.5:
-        print("Dog")
-    else:
-        print("Not Dog")
-
-    print("Actual: ")
-    if y_dog[i] == 0:
-        print("Dog")
-    else:
-        print("Not Dog")
+    if prediction[0][0] > 0.5 and y_dog[i] == 0:
+        wrong += 1
     i += 1
+
+print("Wrong predictions: ", wrong)
+print("Percentage of wrong predictions: ", wrong / i * 100)
